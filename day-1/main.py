@@ -33,21 +33,24 @@ with open("input.txt", "r") as f:
     # Cleaning up the data
     data = [line.strip() for line in f.readlines()]
     dial_position = 50
-    zero_count = 0
+    zero_landings = 0
+    zero_passes = 0
 
     for line in data:
         # L moves back (-1) and R moves forward (1)
         direction = -1 if line[0] == "L" else 1
         distance = int(line[1:])
+        offset = direction * distance
 
-        # We are constrained to 0 - 99, when is a better time to use modulus!!!!
-        # We get the total movement by adding the disposition to the offset,
-        # then we mod to constrain the answer to 0 - 99
-        dial_position = (dial_position + direction * distance) % 100
+        # For puzzle one, we count how many times we *pass* zero
+        for i in range(distance):
+            if (dial_position + i * direction) % 100 == 0:
+                zero_passes += 1
 
-        # if zero, add it to the zero count, cause the number of times we *land* on zero is the answer to the puzzle!
+        # For puzzle two, we count how many times we *land on* zero
+        dial_position = (dial_position + offset) % 100
         if dial_position == 0:
-            zero_count += 1
+            zero_landings += 1
 
-    print(zero_count)
-
+    print(f"Answer to puzzle 1: {zero_landings}")
+    print(f"Answer to puzzle 2: {zero_passes}")
