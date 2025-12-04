@@ -28,8 +28,11 @@ The password is how many times the dial is left pointing at 0 after any rotation
 
 
 """
+import time
 
 with open("input.txt", "r") as f:
+    start_time = time.time()
+
     # Cleaning up the data
     data = [line.strip() for line in f.readlines()]
     dial_position = 50
@@ -42,15 +45,23 @@ with open("input.txt", "r") as f:
         distance = int(line[1:])
         offset = direction * distance
 
-        # For puzzle one, we count how many times we *pass* zero
-        for i in range(distance):
-            if (dial_position + i * direction) % 100 == 0:
-                zero_passes += 1
-
-        # For puzzle two, we count how many times we *land on* zero
+        # ================ Puzzle One ================
+        # For puzzle one, we count how many times we *land on* zero
         dial_position = (dial_position + offset) % 100
         if dial_position == 0:
             zero_landings += 1
 
+        # ================ Puzzle Two ================
+        # For puzzle two, we count how many times we *pass* zero
+        for i in range(distance):
+            if (dial_position + i * direction) % 100 == 0:
+                zero_passes += 1
+
+    end_time = time.time()
+
+    total_time = end_time - start_time
+
     print(f"Answer to puzzle 1: {zero_landings}")
     print(f"Answer to puzzle 2: {zero_passes}")
+
+    print(f"Computation Time: {total_time} seconds")
